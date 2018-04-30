@@ -1,0 +1,3 @@
+[submodule "software/arduino/libraries/nRF905"]
+	path = software/arduino/libraries/nRF905
+	url = https://github.com/zkemble/nRF905
