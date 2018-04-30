@@ -2,3 +2,5 @@ git add . #Add files
 git commit
 git push origin master
 git status
+
+git clone --recursive https://github.com/ermo/NRF905_sensor
