@@ -4,3 +4,7 @@ git push origin master
 git status
 
 git clone --recursive https://github.com/ermo/NRF905_sensor
+
+git tag -a v1.0 -m "First official release"
+git tag -l
+git push origin v1.0
