@@ -1,6 +1,4 @@
 [submodule "software/arduino/libraries/nRF905"]
 	path = software/arduino/libraries/nRF905
 	url = https://github.com/zkemble/nRF905
-[submodule "hardware/kicad/library/kicad-symbols"]
-	path = hardware/kicad/library/kicad-symbols
-	url = https://github.com/KiCad/kicad-symbols.git
+
