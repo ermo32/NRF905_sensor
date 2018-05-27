@@ -75,7 +75,10 @@ void loop()
 	static uint32_t pings;
 	static uint32_t invalids;
 
-	Serial.println(F("Waiting for ping..."));
+  state1 = digitalRead(16);
+  state2 = digitalRead(17);
+
+  Serial.println(F("Waiting for ping..."));
 
 	// Wait for data
 	while(packetStatus == PACKET_NONE);

@@ -21,6 +21,9 @@
  * 12 -> SO
  * 11 -> SI
  * 13 -> SCK
+ * 
+ * 5 -> power detect 1 (mail set)
+ * 6 -> power detect 2 (mail reset)
  */
 
 #include <nRF905.h>
@@ -52,6 +55,8 @@ void setup()
 	Serial.println(F("Client started"));
 	
 	pinMode(A5, OUTPUT); // LED
+  pinMode(5, INPUT_PULLUP);  // Switch mail set
+  pinMode(6, INPUT_PULLUP);  // Switch mail set
 
 	// Start up
 	nRF905_init();
@@ -73,15 +78,19 @@ void loop()
 	static uint32_t replies;
 	static uint32_t timeouts;
 	static uint32_t invalids;
+  static uint8_t payload_size;
+  static uint16_t state1, state2;
 
+  payload_size = 1;
+  
 	// Make data
-	char data[NRF905_MAX_PAYLOAD] = {0};
-	sprintf(data, "test %hhu", counter);
+	char data[payload_size] = {0};
+	sprintf(data, "t");
 	counter++;
 	
 	packetStatus = PACKET_NONE;
-
-	Serial.print(F("Sending data: "));
+  
+  Serial.print(F("Sending data: "));
 	Serial.println(data);
 	
 	uint32_t startTime = millis();
@@ -132,13 +141,22 @@ void loop()
 		Serial.println(F("ms"));
 
 		// Get the ping data
-		uint8_t replyData[NRF905_MAX_PAYLOAD];
+		uint8_t replyData[payload_size];
 		nRF905_read(replyData, sizeof(replyData));
 
 		// Print out ping contents
 		Serial.print(F("Data from server: "));
 		Serial.write(replyData, sizeof(replyData));
 		Serial.println();
+
+    state1 = digitalRead(5);
+    state2 = digitalRead(6);
+
+    Serial.print(F("Status inputs: "));
+    Serial.print(state1+65);
+    Serial.print(state2+65);
+    Serial.println();
+
 	}
 
 	// Turn off module
