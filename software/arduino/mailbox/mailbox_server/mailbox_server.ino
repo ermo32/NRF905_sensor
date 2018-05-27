@@ -61,10 +61,10 @@ void setup()
 	nRF905_setListenAddress(RXADDR);
 
 	// Lowest transmit level -10db
-	nRF905_setTransmitPower(NRF905_PWR_n10);
+	nRF905_setTransmitPower(NRF905_PWR_10);
 
 	// Reduce receive sensitivity to save a few mA
-	nRF905_setLowRxPower(NRF905_LOW_RX_ENABLE);
+	//nRF905_setLowRxPower(NRF905_LOW_RX_ENABLE);
 
 	// Put into receive mode
 	nRF905_RX();
@@ -74,9 +74,6 @@ void loop()
 {
 	static uint32_t pings;
 	static uint32_t invalids;
-
-  state1 = digitalRead(16);
-  state2 = digitalRead(17);
 
   Serial.println(F("Waiting for ping..."));
 
