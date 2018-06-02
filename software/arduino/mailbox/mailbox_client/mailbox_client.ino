@@ -24,9 +24,15 @@
  * 
  * 5 -> power detect 1 (mail set)
  * 6 -> power detect 2 (mail reset)
+ *
+ * Powerconsumption @Vcc = 8.3 Volt:
+ * TX + RX on             = 28.3 mA
+ * Sleep NRF905           = 16.0 mA
+ * Sleep NRF905 + Arduino = 12.8 mA
  */
 
 #include <nRF905.h>
+#include <avr/sleep.h>
 
 #define RXADDR 0xFE4CA6E5 // Address of this device
 #define TXADDR 0x586F2E10 // Address of device to send to
@@ -75,103 +81,82 @@ void loop()
 {
 	static uint8_t counter;
 	static uint32_t sent;
-	static uint32_t replies;
-	static uint32_t timeouts;
-	static uint32_t invalids;
   static uint8_t payload_size;
   static uint16_t state1, state2;
 
-  payload_size = 1;
+
+  while(sent<11)
+  {
+    payload_size = 1;
   
-	// Make data
-	char data[payload_size] = {0};
-	sprintf(data, "t");
-	counter++;
+    // Make data
+    char data[payload_size] = {0};
+    sprintf(data, "t");
+    counter++;
 	
-	packetStatus = PACKET_NONE;
+    packetStatus = PACKET_NONE;
   
-  Serial.print(F("Sending data: "));
-	Serial.println(data);
+    Serial.print(F("Sending data: "));
+    Serial.println(data);
 	
-	uint32_t startTime = millis();
+        // Send the data (send fails if other transmissions are going on, keep trying until success) and enter RX mode on completion
+    // If the radio is powered down then this function will take an additional 3ms to complete
+    while(!nRF905_TX(TXADDR, data, sizeof(data), NRF905_NEXTMODE_RX));
+    sent++;
 
-	// Send the data (send fails if other transmissions are going on, keep trying until success) and enter RX mode on completion
-	// If the radio is powered down then this function will take an additional 3ms to complete
-	while(!nRF905_TX(TXADDR, data, sizeof(data), NRF905_NEXTMODE_RX));
-	sent++;
+    Serial.println(F("Data sent, waiting for reply..."));
 
-	Serial.println(F("Data sent, waiting for reply..."));
+    uint8_t success;
 
-	uint8_t success;
+    while(1)
+    {
+      success = packetStatus;
+      if(success != PACKET_NONE)
+        break;
+    }
 
-	// Wait for reply with timeout
-	uint32_t sendStartTime = millis();
-	while(1)
-	{
-		success = packetStatus;
-		if(success != PACKET_NONE)
-			break;
-		else if(millis() - sendStartTime > TIMEOUT)
-			break;
-	}
+    if(success == PACKET_INVALID)
+    {
+      Serial.println(F("Invalid packet!"));
+    }
+    else
+    {
+      // If success toggle LED and send ping time over UART
 
-	if(success == PACKET_NONE)
-	{
-		Serial.println(F("Ping timed out"));
-		timeouts++;
-	}
-	else if(success == PACKET_INVALID)
-	{
-		Serial.println(F("Invalid packet!"));
-		invalids++;
-	}
-	else
-	{
-		// If success toggle LED and send ping time over UART
-		uint16_t totalTime = millis() - startTime;
+      static uint8_t ledState;
+      digitalWrite(A5, ledState ? HIGH : LOW);
+      ledState = !ledState;
 
-		static uint8_t ledState;
-		digitalWrite(A5, ledState ? HIGH : LOW);
-		ledState = !ledState;
+      // Get the ping data
+      uint8_t replyData[payload_size];
+      nRF905_read(replyData, sizeof(replyData));
 
-		replies++;
+      // Print out ping contents
+      Serial.print(F("Data from server: "));
+      Serial.write(replyData, sizeof(replyData));
+      Serial.println();
 
-		Serial.print(F("Ping time: "));
-		Serial.print(totalTime);
-		Serial.println(F("ms"));
+      state1 = digitalRead(5);
+      state2 = digitalRead(6);
 
-		// Get the ping data
-		uint8_t replyData[payload_size];
-		nRF905_read(replyData, sizeof(replyData));
+      Serial.print(F("Status inputs: "));
+      Serial.print(state1+65);
+      Serial.print(state2+65);
+      Serial.println();
+    }
 
-		// Print out ping contents
-		Serial.print(F("Data from server: "));
-		Serial.write(replyData, sizeof(replyData));
-		Serial.println();
+    Serial.print(F("Totals: "));
+    Serial.print(sent);
+    Serial.println(F("------"));
 
-    state1 = digitalRead(5);
-    state2 = digitalRead(6);
+    delay(100);
+  }  
 
-    Serial.print(F("Status inputs: "));
-    Serial.print(state1+65);
-    Serial.print(state2+65);
-    Serial.println();
+    // Turn off module
+    nRF905_powerDown();
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);   // sleep mode is set here
+    sleep_enable(); //saves 3.2 mA
+    sleep_mode(); 
 
-	}
-
-	// Turn off module
-	nRF905_powerDown();
-
-	Serial.print(F("Totals: "));
-	Serial.print(sent);
-	Serial.print(F(" Sent, "));
-	Serial.print(replies);
-	Serial.print(F(" Replies, "));
-	Serial.print(timeouts);
-	Serial.print(F(" Timeouts, "));
-	Serial.print(invalids);
-	Serial.println(F(" Invalid"));
-	Serial.println(F("------"));
-
-	delay(1000);
+  while(1);
 }
