@@ -61,8 +61,8 @@ void setup()
 	Serial.println(F("Client started"));
 	
 	pinMode(A5, OUTPUT); // LED
-  pinMode(5, INPUT_PULLUP);  // Switch mail set
-  pinMode(6, INPUT_PULLUP);  // Switch mail set
+  pinMode( 5, INPUT_PULLUP);  // Switch mail set
+  pinMode( 6, INPUT_PULLUP);  // Switch mail set
 
 	// Start up
 	nRF905_init();
@@ -90,8 +90,8 @@ void loop()
     payload_size = 1;
   
     // Make data
-    char data[payload_size] = {0};
-    sprintf(data, "t");
+    char data[1] = {0};
+    sprintf(data, "A");
     counter++;
 	
     packetStatus = PACKET_NONE;
@@ -128,12 +128,12 @@ void loop()
       ledState = !ledState;
 
       // Get the ping data
-      uint8_t replyData[payload_size];
+      uint8_t replyData[1];
       nRF905_read(replyData, sizeof(replyData));
 
       // Print out ping contents
       Serial.print(F("Data from server: "));
-      Serial.write(replyData, sizeof(replyData));
+      Serial.write(replyData,sizeof(replyData));
       Serial.println();
 
       state1 = digitalRead(5);
