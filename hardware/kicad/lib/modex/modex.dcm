@@ -6,6 +6,18 @@ K POWER REGUL
 F regulator\lm78lxx.pdf
 $ENDCMP
 #
+$CMP Arduino_Mini_01_Socket
+D Socket for Arduino Mini 01
+K Arduino MPU Shield
+F https://store.arduino.cc/arduino-mini-05
+$ENDCMP
+#
+$CMP Arduino_Mini_02_Socket
+D Socket for Arduino Mini 02
+K Arduino MPU Shield
+F https://store.arduino.cc/arduino-mini-05
+$ENDCMP
+#
 $CMP IRM-05-5
 D Linear Regulator +5V
 K POWER REGUL

@@ -1,4 +1,4 @@
-update=5/3/2018 1:59:57 PM
+update=Thu 14 Jun 2018 09:02:35 PM CEST
 version=1
 last_client=kicad
 [pcbnew]
@@ -23,6 +23,8 @@ ModuleOutlineThickness=0.150000000000
 [cvpcb]
 version=1
 NetIExt=net
+[general]
+version=1
 [eeschema]
 version=1
 LibDir=
@@ -59,5 +61,5 @@ LibName29=opto
 LibName30=atmel
 LibName31=contrib
 LibName32=valves
-[general]
-version=1
+LibName33=lib/modex/modex
+LibName34=/home/erik/_Projects/arduino-kicad-library/arduino
