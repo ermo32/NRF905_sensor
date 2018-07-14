@@ -74,4 +74,15 @@ Wire Wire Line
 	6500 2850 7300 2850
 Wire Wire Line
 	7300 2850 7300 3250
+$Comp
+L Arduino_mini_mega_328_5V_16MHz U?
+U 1 1 5B4A18E5
+P 4450 3400
+F 0 "U?" H 4450 3400 60  0000 C CNN
+F 1 "Arduino_mini_mega_328_5V_16MHz" H 4850 2400 60  0000 C CNN
+F 2 "" H 4450 3400 60  0001 C CNN
+F 3 "" H 4450 3400 60  0001 C CNN
+	1    4450 3400
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
