@@ -1,5 +1,6 @@
 (module IRM-05 (layer F.Cu) (tedit 57D0585A)
-  (descr "Fujitsu Relay")
+  (descr "Mean well Power supply")
+  (tags "Power supply")
   (fp_text reference REF** (at -1.524 -4.572) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )

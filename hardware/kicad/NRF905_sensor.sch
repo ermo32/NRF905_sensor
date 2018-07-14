@@ -33,6 +33,7 @@ LIBS:contrib
 LIBS:valves
 LIBS:modex
 LIBS:arduino
+LIBS:NRF905_sensor-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -48,14 +49,29 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Arduino_Mini_01_Socket XA?
-U 1 1 5B22BE11
-P 6350 3700
-F 0 "XA?" V 6450 3700 60  0000 C CNN
-F 1 "Arduino_Mini_01_Socket" V 6250 3700 60  0000 C CNN
-F 2 "" H 8150 7450 60  0001 C CNN
-F 3 "" H 8150 7450 60  0001 C CNN
-	1    6350 3700
+L NRF905_module U1
+U 1 1 5B4A0AB9
+P 5900 3500
+F 0 "U1" H 5550 4300 60  0000 C CNN
+F 1 "NRF905_module" H 5850 2600 60  0000 C CNN
+F 2 "modex:NRF905_module" H 5750 3350 60  0001 C CNN
+F 3 "" H 5750 3350 60  0001 C CNN
+	1    5900 3500
 	1    0    0    -1  
 $EndComp
+$Comp
+L C C1
+U 1 1 5B4A0C8C
+P 7300 3400
+F 0 "C1" H 7325 3500 50  0000 L CNN
+F 1 "C" H 7325 3300 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0603" H 7338 3250 50  0001 C CNN
+F 3 "" H 7300 3400 50  0001 C CNN
+	1    7300 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6500 2850 7300 2850
+Wire Wire Line
+	7300 2850 7300 3250
 $EndSCHEMATC
